@@ -28,8 +28,6 @@ export function validateForm(formControls) {
     for (let control in formControls) {
         if (formControls.hasOwnProperty(control)) { // Для проверки только нужных свойств. For in может перебирать не нужные свойства
             isFormValid = formControls[control].valid && isFormValid;
-            console.log('formControls[control]: ', formControls[control]);
-            
         }
     }
 

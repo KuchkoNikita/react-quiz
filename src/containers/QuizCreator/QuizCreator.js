@@ -44,10 +44,38 @@ export default class QuizCreator extends Component {
 
     addQuestionHadler = (event) => {
         event.preventDefault();
+
+        const quiz = this.state.quiz.concat();
+        const index = quiz.length + 1;
+
+        const {question, option1, option2, option3, option4} = this.state.formControls;
+
+        const questionItem = {
+            question: question.value,
+            id: index,
+            rightAnswerId: this.state.rightAnswerId,
+            answes: [
+                { text: option1.value, id: option1.id },
+                { text: option2.value, id: option2.id },
+                { text: option3.value, id: option3.id },
+                { text: option4.value, id: option4.id },
+            ]
+        }
+
+        quiz.push(questionItem)
+
+        this.setState({
+            quiz, 
+            isFormValid: false,
+            formControls: createFormControls(),
+            rightAnswerId: 1,
+        })
     }
     
-    createQuizHandler = () => {
+    createQuizHandler = (event) => {
+        event.preventDefault();
 
+        console.log(this.state.quiz);
     }
 
     changeHandler = (value, controlName) => {
@@ -88,7 +116,6 @@ export default class QuizCreator extends Component {
     }
 
     selectChangeHandler = (event) => {
-        console.log(event.target.value);
         this.setState({
             rightAnswerId: +event.target.value,
         })
