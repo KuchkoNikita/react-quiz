@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import classes from './QuizCreator.css';
 import Button from './../../components/UI/Button/Button.js';
 import Input from './../../components/UI/Input/Input';
-import {createControl} from './../../form/formFramework';
+import {createControl, validate, validateForm} from './../../form/formFramework';
 import Auxiliary from './../../hoc/Auxiliary/Auxiliary';
 import Select from './../../components/UI/Select/Select';
 
@@ -32,7 +32,8 @@ function createFormControls() {
 export default class QuizCreator extends Component {
 
     state = {
-        quiz: [],
+        quiz: [], 
+        isFormValid: false,
         formControls: createFormControls(),
         rightAnswerId: 1,
     }
@@ -41,8 +42,8 @@ export default class QuizCreator extends Component {
         event.preventDefault();
     }
 
-    addQuestionHadler = () => {
-
+    addQuestionHadler = (event) => {
+        event.preventDefault();
     }
     
     createQuizHandler = () => {
@@ -50,7 +51,19 @@ export default class QuizCreator extends Component {
     }
 
     changeHandler = (value, controlName) => {
+        const formControls = { ...this.state.formControls };
+        const control = { ...formControls[controlName] };
 
+        control.touched = true;
+        control.value = value;
+        control.valid = validate(control.value, control.validation);
+
+        formControls[controlName] = control;
+
+        this.setState({
+            formControls,
+            isFormValid: validateForm(formControls),
+        })
     }
 
     renderInputs() {
@@ -107,11 +120,13 @@ export default class QuizCreator extends Component {
                         <Button
                             type="primery"
                             onClick={this.addQuestionHadler}
+                            disabled={!this.state.isFormValid}
                         >Добавить вопрос</Button>
 
                         <Button
                             type="success"
                             onClick={this.createQuizHandler}
+                            disabled={this.state.quiz.length === 0}
                         >Cоздать тест</Button>
                     </form>
                 </div>
